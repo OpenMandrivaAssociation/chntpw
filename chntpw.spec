@@ -10,7 +10,6 @@ URL:		http://home.eunet.no/~pnordahl/ntpasswd/
 Source0:	http://home.eunet.no/~pnordahl/ntpasswd/chntpw-source-%{snap}.zip
 Source1:	chntpw.8
 BuildRequires:	openssl-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 This little program will enable you to view some information and change user
