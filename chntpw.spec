@@ -11,6 +11,7 @@ Source0:	http://home.eunet.no/~pnordahl/ntpasswd/chntpw-source-%{snap}.zip
 Source1:	chntpw.8
 BuildRequires:	openssl-devel
 BuildRequires:	openssl-static-devel
+BuildRequires:	glibc-static-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
