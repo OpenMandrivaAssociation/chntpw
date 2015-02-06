@@ -3,7 +3,7 @@
 Summary:	The Offline NT Password Editor
 Name:		chntpw
 Version:	0.99.6
-Release:	5
+Release:	6
 License:	GPL
 Group:		File tools
 URL:		http://home.eunet.no/~pnordahl/ntpasswd/
