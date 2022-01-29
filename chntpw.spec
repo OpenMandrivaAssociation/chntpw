@@ -1,67 +1,33 @@
-%define snap 080526
-
-Summary:	The Offline NT Password Editor
-Name:		chntpw
-Version:	0.99.6
-Release:	6
-License:	GPL
-Group:		File tools
-URL:		http://home.eunet.no/~pnordahl/ntpasswd/
-Source0:	http://home.eunet.no/~pnordahl/ntpasswd/chntpw-source-%{snap}.zip
-Source1:	chntpw.8
-BuildRequires:	openssl-devel
-BuildRequires:	openssl-static-devel
-BuildRequires:	glibc-static-devel
+Name: chntpw
+Version: 140201
+Release: 1
+Source0: http://pogostick.net/~pnh/ntpasswd/chntpw-source-%{version}.zip
+Source1: chntpw.8
+Summary: Tool for resetting Windows passwords
+Url: http://pogostick.net/~pnh/ntpasswd
+License: GPLv2
+Group: Tools
+BuildRequires: pkgconfig(openssl)
+BuildRequires: make
 
 %description
-This little program will enable you to view some information and change user
-passwords in a Windows NT SAM userdatabase file. You do not need to know the
-old passwords. However, you need to get at the file some way or another
-yourself. In addition it contains a simple registry editor with full write
-support, and hex-editor which enables you to fiddle around with bits&bytes in
-the file as you wish yourself.
+Tool for resetting Windows passwords.
 
-%package -n	reged
-Summary:	Simple Registry Edit Utility
-Group:		File tools
-
-%description -n	reged
-This program is a command line utility to export of registry to .reg files.
+This can be useful when recovering a Windows installation from
+a booted Live Linux image, or on dual boot systems.
 
 %prep
-
-%setup -q -n chntpw-%{snap}
-
-cp %{SOURCE1} chntpw.8
-
-# fix attribs
-find . -type d -exec chmod 755 {} \;
-find . -type f -exec chmod 644 {} \;
+%autosetup -p1
+%make_build clean
 
 %build
-%serverbuild
-
-make \
-    CFLAGS="$CFLAGS -DUSEOPENSSL -I. -I%{_includedir}  -Wall" \
-    OSSLLIB=%{_libdir} \
-    LIBS="-L%{_libdir} -lcrypto"
+%make_build chntpw cpnt reged samusrgrp sampasswd CC=%{__cc} CFLAGS="%{optflags} -DUSEOPENSSL" OSSLLIB="%{_libdir}"
 
 %install
-
-install -d %{buildroot}%{_sbindir}
-install -d %{buildroot}%{_mandir}/man8
-
-install -m0755 %{name} %{buildroot}%{_sbindir}/
-install -m0755 %{name}.static %{buildroot}%{_sbindir}/
-install -m0755 reged %{buildroot}%{_sbindir}/
-install -m0755 reged.static %{buildroot}%{_sbindir}/
-install -m0644 chntpw.8 %{buildroot}%{_mandir}/man8/
-
+mkdir -p %{buildroot}%{_bindir} %{buildroot}%{_mandir}/man8
+install -m 755 chntpw cpnt reged samusrgrp sampasswd %{buildroot}%{_bindir}/
+install -c -m 644 %{S:1} %{buildroot}%{_mandir}/man8/
 
 %files
-%doc HISTORY.txt README.txt regedit.txt
-%{_sbindir}/%{name}*
+%{_bindir}/*
 %{_mandir}/man8/chntpw.8*
-
-%files -n reged
-%{_sbindir}/reged*
