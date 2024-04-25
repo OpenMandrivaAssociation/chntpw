@@ -1,33 +1,30 @@
 Name: chntpw
-Version: 140201
+Version: 1.0.2
 Release: 1
-Source0: http://pogostick.net/~pnh/ntpasswd/chntpw-source-%{version}.zip
-Source1: chntpw.8
-Summary: Tool for resetting Windows passwords
-Url: http://pogostick.net/~pnh/ntpasswd
+Source0: https://github.com/minacle/chntpw/archive/refs/tags/v%{version}.tar.gz
+Patch0:  5adc4f48aa4ef624d481ff45b28fc998d7a9f2d5.patch
+Summary: Offline NT Password & Registry Editor
+Url: https://github.com/minacle/chntpw
 License: GPLv2
 Group: Tools
 BuildRequires: pkgconfig(openssl)
-BuildRequires: make
+BuildRequires: cmake ninja
 
 %description
-Tool for resetting Windows passwords.
-
-This can be useful when recovering a Windows installation from
-a booted Live Linux image, or on dual boot systems.
+Chntpw (also known as Offline NT Password & Registry Editor)
+is a small Windows password removal utility.
 
 %prep
 %autosetup -p1
-%make_build clean
+
+%cmake -G Ninja
 
 %build
-%make_build chntpw cpnt reged samusrgrp sampasswd CC=%{__cc} CFLAGS="%{optflags} -DUSEOPENSSL" OSSLLIB="%{_libdir}"
+%ninja_build -C build
 
 %install
-mkdir -p %{buildroot}%{_bindir} %{buildroot}%{_mandir}/man8
-install -m 755 chntpw cpnt reged samusrgrp sampasswd %{buildroot}%{_bindir}/
-install -c -m 644 %{S:1} %{buildroot}%{_mandir}/man8/
+mkdir -p %{buildroot}%{_bindir}
+cd build && install -m 755 chntpw cpnt reged samusrgrp sampasswd %{buildroot}%{_bindir}/
 
 %files
 %{_bindir}/*
-%{_mandir}/man8/chntpw.8*
